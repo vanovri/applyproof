@@ -1,0 +1,26 @@
+{
+  "profile": {
+    "name": "Alex Morgan (fictional demo)",
+    "facts": [
+      {"id":"degree", "text":"Completed a BEng in Electrical Engineering in 2026.", "skills":["electrical-degree"], "level":"credential", "source":{"label":"Demo diploma", "locator":"demo://degree", "excerpt":"BEng Electrical Engineering, 2026", "verified":true}},
+      {"id":"ups", "text":"Observed UPS and converter maintenance during an airport engineering internship.", "skills":["UPS"], "level":"exposure", "source":{"label":"Demo internship log", "locator":"demo://internship", "excerpt":"Observed UPS and converter maintenance", "verified":true}},
+      {"id":"python", "text":"Built a Python tool that logs sensor measurements to CSV.", "skills":["Python", "documentation"], "level":"hands-on", "source":{"label":"Demo project repository", "locator":"demo://project", "excerpt":"Python sensor logger with CSV export", "verified":true}},
+      {"id":"english", "text":"Completed an institutional English prediction test.", "skills":["English"], "level":"credential", "source":{"label":"Demo language result", "locator":"demo://english", "excerpt":"Institutional prediction test", "verified":true}},
+      {"id":"cad", "text":"Practised CAD during a short online course.", "skills":["CAD"], "level":"exposure", "source":{"label":"Unconfirmed course note", "locator":"demo://unverified", "excerpt":"Candidate recollection only", "verified":false}}
+    ]
+  },
+  "job": {
+    "company":"Northline Engineering (fictional)",
+    "title":"Junior Electrical Engineer",
+    "source":{"label":"Demo job poster", "locator":"demo://job", "excerpt":"Electrical degree, hands-on UPS, CAD and professional English. Project placement required.", "verified":true},
+    "preferred_city":"South Jakarta",
+    "requirements":[
+      {"id":"degree", "label":"Electrical Engineering degree", "skill":"electrical-degree", "minimum_level":"credential", "mandatory":true},
+      {"id":"ups", "label":"Hands-on UPS systems", "skill":"UPS", "minimum_level":"hands-on", "mandatory":true},
+      {"id":"cad", "label":"CAD proficiency", "skill":"CAD", "minimum_level":"hands-on", "mandatory":true},
+      {"id":"english", "label":"Professional working English", "skill":"English", "minimum_level":"hands-on", "mandatory":true},
+      {"id":"documentation", "label":"Technical documentation", "skill":"documentation", "minimum_level":"hands-on", "mandatory":false}
+    ],
+    "locations":[{"city":"South Jakarta", "scope":"office", "source":{"label":"Demo company address", "locator":"demo://office", "excerpt":"Headquarters: South Jakarta", "verified":true}}]
+  }
+}
