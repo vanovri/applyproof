@@ -30,32 +30,23 @@ Reviewed on 2026-11-07 against the current working tree on disk. All line number
 ## TD-02 — Eliminate duplicate `_validate_pdf_upload` check in `pdf_check` after pre-thread validation
 
 - **Location**: `applyproof/api.py:152-159`
-- **Analysis**: `pdf_check` validates size and `%PDF-` magic header via `_validate_pdf_upload(data)` before spawning the worker thread, and `inspect_pdf(data)` immediately calls `_validate_pdf_upload(data)` a second time while `load_demo_case()` (`api.py:73-82`) also re-reads `examples/demo.json` synchronously on every `GET /api/demo`.
+- **Analysis**: `pdf_check` validates size and `%PDF-` magic header via `_validate_pdf_upload(data)` before spawning the worker thread, and `inspect_pdf(data)` immediately calls `_validate_pdf_upload(data)` a second time The duplicate guard consists of constant-time length and short magic-prefix checks, so its elapsed cost has not been established as material. Adopt the extraction only if profiling or validation ownership justifies it.
 
 ```diff
 --- a/applyproof/api.py
 +++ b/applyproof/api.py
-@@ -149,6 +149,19 @@
-     }
+@@ -137,6 +137,10 @@
  
- 
+ def inspect_pdf(data: bytes) -> PdfInspectionResult:
+     _validate_pdf_upload(data)
++    return _inspect_validated_pdf(data)
++
++
 +def _inspect_validated_pdf(data: bytes) -> PdfInspectionResult:
-+    counts = _extract_pdf_page_counts(data)
-+    has_text_layer = bool(counts) and all(count > MIN_PAGE_TEXT_CHARS for count in counts)
-+    status: PdfTextStatus = "text_layer_found" if has_text_layer else "needs_text_layer_review"
-+    return {
-+        "pages": len(counts),
-+        "characters_by_page": counts,
-+        "status": status,
-+        "stored": False,
-+        "note": PDF_NOTE,
-+    }
-+
-+
- @app.post("/api/pdf-check")
- async def pdf_check(file: Annotated[UploadFile, File(...)]) -> PdfInspectionResult:
-     try:
-@@ -156,7 +169,7 @@
+     counts = _extract_pdf_page_counts(data)
+     has_text_layer = bool(counts) and all(count > MIN_PAGE_TEXT_CHARS for count in counts)
+     status: PdfTextStatus = "text_layer_found" if has_text_layer else "needs_text_layer_review"
+@@ -156,7 +160,7 @@
      finally:
          await file.close()
      _validate_pdf_upload(data)
