@@ -1,9 +1,12 @@
 import io
 import json
 from pathlib import Path
+
 import pytest
-from applyproof.models import Case
+
 from applyproof.engine import ai_select
+from applyproof.models import Case
+
 
 def sample():
     return Case.model_validate_json((Path(__file__).resolve().parent.parent/'examples/demo.json').read_text())

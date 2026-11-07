@@ -1,12 +1,15 @@
 import copy
 import json
 from pathlib import Path
+
 import pytest
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
+
 from applyproof.api import app
-from applyproof.models import Case, Draft, Audit
-from applyproof.engine import assess, build_draft, audit_draft, location_check
+from applyproof.engine import assess, audit_draft, build_draft, location_check
+from applyproof.models import Audit, Case, Draft
+
 
 @pytest.fixture
 def case():
