@@ -1,6 +1,8 @@
 # Technical Debt & Performance Ledger: applyproof
 
-Reviewed on 2026-11-07 against the current working tree on disk. All line numbers are 1-based and verified directly against the current production files. Every diff below is a non-destructive engineering proposal, not an applied production edit.
+Crosschecked 2026-11-08 WIB. All code diffs below are proposal-only and have not changed production source. Source references and removed patch lines were checked against this working tree. Runtime speedups remain unmeasured unless evidence is explicitly cited.
+
+Reviewed on 2026-11-08 WIB against the current working tree on disk. All line numbers are 1-based and verified directly against the current production files. Every diff below is a non-destructive engineering proposal, not an applied production edit.
 
 ## TD-01 — Avoid full `assess(case)` and `evidence_digest` recomputation inside `audit_draft`
 
@@ -8,6 +10,7 @@ Reviewed on 2026-11-07 against the current working tree on disk. All line number
 - **Analysis**: `audit_draft` calls `build_draft(case)` solely to read `bullets`, discarding `build_draft`'s `assessment` field (`assess(case)` + full `case.profile.model_dump()` SHA-256 `evidence_digest`) and `fact.source.model_dump()` allocations on every `/api/audit` keystroke/request.
 
 ```diff
+diff --git a/applyproof/engine.py b/applyproof/engine.py
 --- a/applyproof/engine.py
 +++ b/applyproof/engine.py
 @@ -179,9 +179,10 @@
@@ -33,6 +36,7 @@ Reviewed on 2026-11-07 against the current working tree on disk. All line number
 - **Analysis**: `pdf_check` validates size and `%PDF-` magic header via `_validate_pdf_upload(data)` before spawning the worker thread, and `inspect_pdf(data)` immediately calls `_validate_pdf_upload(data)` a second time The duplicate guard consists of constant-time length and short magic-prefix checks, so its elapsed cost has not been established as material. Adopt the extraction only if profiling or validation ownership justifies it.
 
 ```diff
+diff --git a/applyproof/api.py b/applyproof/api.py
 --- a/applyproof/api.py
 +++ b/applyproof/api.py
 @@ -137,6 +137,10 @@
